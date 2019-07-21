@@ -1,0 +1,36 @@
+1)
+a. 15.21 a Paula
+b.Marcos 
+c. Agregar columna Date
+d. Agregar nueva fila
+
+2)
+id int not null autoincrement PK
+Nombre VARCHAR(30) not null
+Raza Varchar(30) not null
+Dueño Varchar(30) not null
+
+3)
+pk legajo subrogada
+pk documento natural 
+
+4) se puede repetir
+la cambiaria a documento
+
+5)
+int
+varchar(70)
+int
+datetime
+decimal(5,2)
+int
+
+6)CREATE TABLE cancha(
+id int,
+fecha datetime, 
+equipo_1 varchar(50),
+equipo_2 varchar(50),
+precio decimal(6,2),
+pRIMARY KEY(id)
+
+);

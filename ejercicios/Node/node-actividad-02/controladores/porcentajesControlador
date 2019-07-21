@@ -1,0 +1,14 @@
+
+function calcular(req, res) {
+ 	var valor = req.query.valor;
+ 	var porcentaje = req.query.porcentaje;
+
+ 	var respuesta = porcentaje * valor / 100;
+ 
+
+ 	res.send("El "+porcentaje+"% de "+valor+" es "+respuesta);
+}
+
+module.exports = {
+	calcular : calcular
+};
