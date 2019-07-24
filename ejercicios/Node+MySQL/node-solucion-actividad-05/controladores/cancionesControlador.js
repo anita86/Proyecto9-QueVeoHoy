@@ -7,7 +7,7 @@ function buscarCanciones(req, res) {
     //si hay algo en la variable autor, es decir, si fue enviado ese parámetro en la URL
     //se asigna a la variable sql la consulta correspondiente.
     if (autor) {
-        var sql = "select * from cancion where autor = '" + autor + "'";
+        var sql = "select * from cancion where autor = '" + autor% + "'";
     } else {
         //si no fue enviado el parámetro autor, se asigna la consulta que obtiene todas las canciones
         var sql = "select * from cancion"
