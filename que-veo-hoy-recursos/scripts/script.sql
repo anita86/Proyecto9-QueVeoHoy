@@ -23,5 +23,5 @@ CREATE TABLE `genero` (
 );
 
 
-ALTER TABLE pelicula ADD COLUMN genero_id INT; 
-ALTER TABLE pelicula ADD FOREIGN KEY (genero_id) REFERENCES genero(id);
+-- ALTER TABLE pelicula ADD COLUMN genero_id INT; 
+-- ALTER TABLE pelicula ADD FOREIGN KEY (genero_id) REFERENCES genero(id);
