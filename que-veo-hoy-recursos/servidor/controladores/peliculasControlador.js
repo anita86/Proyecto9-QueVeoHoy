@@ -1,36 +1,49 @@
 var con = require('../lib/conexionbd');
 
 function buscarPeliculas(req, res) {
+    
     //Primero obtengo query params
     var titulo = req.query.titulo;
     var anio = req.query.anio;
     var genero = req.query.genero;
+	var pagina = req.query.pagina;
+    var cantidad = req.query.cantidad;
+    var columna_orden = req.query.columna_orden;
+    var tipo_orden = req.query.tipo_orden;
 
-    if (titulo){
-        var sql = "select * from pelicula where titulo like '%" + titulo + "%'";
+    var sqlTitulo = "titulo LIKE '%" + titulo + "%' ";
+    var sqlAnio = "anio = " + anio;
+    var sqlGenero = "genero_id = " + genero;
 
-    } else if (anio) {
-        var sql = "select * from pelicula where anio = '" + anio + "'";
-
-    } else if (genero) {
-        var sql = "select * from pelicula where genero_id = '" + genero + "'";
+    var whereSql = (function(){ 
+        if (titulo && anio && genero){
+            return "WHERE " + sqlTitulo + " AND " + sqlAnio + " AND " + sqlGenero + " ";
+        } 
+        else if (titulo && anio && !genero ){
+            return "WHERE " + sqlTitulo + " AND " + sqlAnio + " ";
+        } 
+        else if (titulo && !anio && genero ){
+            return "WHERE " + sqlTitulo + " AND " + sqlGenero + " ";
+        } 
+        else if (!titulo && anio && genero ){
+            return "WHERE " + sqlAnio + " AND " + sqlGenero + " ";
+        } 
+        else if (titulo && !anio && !genero ){
+            return "WHERE " + sqlTitulo + " ";
+        } 
+        else if (!titulo && anio && !genero ){
+            return "WHERE " + sqlAnio + " ";
+        } 
+        else if (!titulo && !anio && genero ){
+            return "WHERE " + sqlGenero + " ";
+        }
+        else return "";       
+    })()
     
-    } else if (titulo & anio & genero){
-        var sql = "select * from pelicula where titulo like '%" + titulo + "%' AND anio = '" + anio + "' AND genero_id = '" + genero + "' ";
 
-    } else if (titulo & anio){
-        var sql = "select * from pelicula where titulo like '%" + titulo + "%' AND anio = '" + anio + "' ";
-
-    } else if (titulo & genero){
-        var sql = "select * from pelicula where titulo like '%" + titulo + "%' AND genero_id = '" + genero + "' ";
-  
-    } else if (anio & genero){
-        var sql = "select * from pelicula where anio = '" + anio + "' AND genero_id = '" + genero + "' ";
-
-    } else {// si no especifica parámetros envío todas las pelis
-        var sql = "select * from pelicula";
-
-    }
+    var sql = "SELECT * FROM pelicula " + whereSql + " ORDER BY " +  columna_orden + " " +  tipo_orden + " LIMIT " +  (pagina - 1) * cantidad + ", " + cantidad;
+    
+    
 //se ejecuta la consulta
     con.query(sql, function(error, resultado, fields) {
         if (error) {
@@ -61,28 +74,6 @@ function buscarGenero(req, res) {
         res.send(JSON.stringify(response));
     });
 }
-
-// function buscarCancion(req, res) {
-//     var id = req.params.id;
-//     var sql = "select * from cancion where id = " + id;
-//     con.query(sql, function(error, resultado, fields) {
-//         if (error) {
-//             console.log("Hubo un error en la consulta", error.message);
-//             return res.status(404).send("Hubo un error en la consulta");
-//         }
-//         if (resultado.length == 0) {
-//             console.log("No se encontro ningún nombre con ese id");
-//             return res.status(404).send("No se encontro ningún nombre con ese id");
-//         } else {
-//             var response = {
-//                 'cancion': resultado
-//             };
-
-//             res.send(JSON.stringify(response));
-//         }
-
-//     });
-// }
 
 module.exports = {
     buscarPeliculas: buscarPeliculas,
