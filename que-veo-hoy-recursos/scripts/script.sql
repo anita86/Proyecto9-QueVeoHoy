@@ -25,3 +25,15 @@ CREATE TABLE `genero` (
 
 -- ALTER TABLE pelicula ADD COLUMN genero_id INT; 
 -- ALTER TABLE pelicula ADD FOREIGN KEY (genero_id) REFERENCES genero(id);
+
+CREATE TABLE `actor` (
+  id int NOT NULL AUTO_INCREMENT,
+  nombre varchar(70),
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `actor_pelicula` (
+  id int NOT NULL,
+  actor_id int,
+  pelicula_id int
+);
