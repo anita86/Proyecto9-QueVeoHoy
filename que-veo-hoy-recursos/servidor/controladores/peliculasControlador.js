@@ -42,19 +42,29 @@ function buscarPeliculas(req, res) {
     
 
     var sql = "SELECT * FROM pelicula " + whereSql + " ORDER BY " +  columna_orden + " " +  tipo_orden + " LIMIT " +  (pagina - 1) * cantidad + ", " + cantidad;
-    
-    
+        
 //se ejecuta la consulta
     con.query(sql, function(error, resultado, fields) {
         if (error) {
             console.log("Hubo un error en la consulta", error.message);
             return res.status(404).send("Hubo un error en la consulta");
         }
+    
+    var sqlTotal = "SELECT COUNT(*) AS total FROM pelicula " + whereSql;
+               	
+    con.query(sqlTotal, function(error, resultado2, fields) {
+        if (error) {
+        	console.log("Hubo un error en la consulta", error.message);
+            return res.status(404).send("Hubo un error en la consulta");
+        }
+
         var response = {
-            'peliculas': resultado
+            'peliculas': resultado,
+            'total' : resultado2[0].total
         };
 
         res.send(JSON.stringify(response));
+    	});
     });
 }
 
