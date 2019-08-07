@@ -85,7 +85,37 @@ function buscarGenero(req, res) {
     });
 }
 
+function informacionPelicula(req, res) {
+
+    var id = req.params.id;
+
+    var sqlPelis = "SELECT pelicula.*, genero.nombre FROM pelicula JOIN genero ON pelicula.genero_id = genero.id WHERE pelicula.id = '" + id + "'";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+    var sqlActores = "SELECT actor_pelicula.*, actor.nombre FROM actor_pelicula JOIN actor ON actor_id = actor.id WHERE pelicula_id = '" + id + "'";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+    
+    con.query(sqlPelis, function(error, resultado, fields) {
+                
+        if (error) {
+            console.log("Hubo un error en la consulta", error.message);
+            return res.status(404).send("Hubo un error en la consulta");
+        }
+
+    con.query(sqlActores, function(error, resultado2, fields) {
+
+        var response = {
+            'pelicula': resultado[0],
+            'actores' : resultado2,
+            'genero' : resultado[0]
+        };
+
+        res.send(JSON.stringify(response));
+        });
+    });
+
+}
+
 module.exports = {
     buscarPeliculas: buscarPeliculas,
-    buscarGenero: buscarGenero
+    buscarGenero: buscarGenero,
+    informacionPelicula: informacionPelicula
 };
