@@ -114,8 +114,61 @@ function informacionPelicula(req, res) {
 
 }
 
+function recomendarPelicula(req, res) {
+
+//Primero obtengo query params
+    var anioInicio = req.query.anio_inicio;
+    var anioFin = req.query.anio_fin;
+    var genero = req.query.genero;
+    var puntuacion = req.query.puntuacion;
+
+    var sqlAnio = "pelicula.anio BETWEEN " + anioInicio + " AND " + anioFin;
+    var sqlPuntuacion = "pelicula.puntuacion >= " + puntuacion ;
+    var sqlGenero = "genero.nombre = '" + genero + "'";  
+    
+    var whereSql = (function(){
+            if (genero && puntuacion && !anioInicio){
+                return "WHERE " + sqlGenero + " AND " + sqlPuntuacion
+            } 
+            else if (genero && !puntuacion && anioInicio){
+                return "WHERE " + sqlGenero + " AND " + sqlAnio
+            } 
+            else if (genero && !puntuacion && !anioInicio) {
+                return "WHERE " + sqlGenero
+            }
+            else if(!genero && puntuacion && !anioInicio) {
+                return "WHERE " + sqlPuntuacion
+            } 
+            else if(!genero && !puntuacion && anioInicio){
+                return "WHERE " + sqlAnio
+            } 
+            else if(!genero && !puntuacion && !anioInicio){
+                return ""
+            }
+    })()
+
+    var sql = "SELECT pelicula.id, pelicula.titulo, pelicula.trama, pelicula.poster, pelicula.anio, pelicula.puntuacion, genero.nombre FROM pelicula JOIN genero ON pelicula.genero_id = genero.id " + whereSql;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        
+//     //se ejecuta la consulta
+        con.query(sql, function(error, resultado, fields) {
+            if (error) {
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(404).send("Hubo un error en la consulta");
+            }
+
+            var response = {
+                'peliculas': resultado
+            };
+
+            res.send(JSON.stringify(response));
+            })
+    
+}
+    
+
 module.exports = {
     buscarPeliculas: buscarPeliculas,
     buscarGenero: buscarGenero,
-    informacionPelicula: informacionPelicula
+    informacionPelicula: informacionPelicula,
+    recomendarPelicula: recomendarPelicula
 };
